@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 #import config
 import telebot
+import time
 
 token = '478680072:AAHLM8h9Y-pYXkn-THQA-YoVeI7ueo1lhw0'
 
@@ -16,9 +17,13 @@ def repeat_all_messages(message): # Название функции не игр�
 if __name__ == '__main__':
 
     while True:
+        start = time.time()
         try:
             bot.polling(none_stop=True)
         except Exception as e:
             print(e)
             continue
 
+        time_delta = time.time()-start
+        if time_delta < 3.0:
+            time.sleep(3-time_delta)
