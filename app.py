@@ -15,6 +15,8 @@ import telebot
 from telebot import types
 import time
 
+from coinmarketcap import Market
+
 
 class Book:
     timestamp = None
@@ -121,6 +123,14 @@ def repeat_all_messages(message): # Название функции не игр�
             start = time.time()
             try:
 
+                coinmarketcap = Market()
+                tickers = coinmarketcap.ticker('', convert='USD')
+
+                for ticker in tickers:
+                    if ticker['symbol'] == symbol.upper():
+                        cmc_marketcap = ticker['market_cap_usd']
+                        cmc_priceusd = ticker['price_usd']
+
                 orderbook = get_orderbook(url)
                 orderbook = format_orderbook(orderbook)
 
@@ -129,26 +139,32 @@ def repeat_all_messages(message): # Название функции не игр�
 
                 book = Book(orderbook)
 
+
                 mid = book.mid
                 width = book.width
                 power_imbalance_2, power_imbalance_4, power_imbalance_8 = book.power_imbalance_list
                 power_adjusted_price_2, power_adjusted_price_4, power_adjusted_price_8, = book.power_adjusted_prices
-                bot.send_message(message.chat.id, symbol.upper()+' features:\n' + ("MID: %s\n"
+                bot.send_message(message.chat.id, symbol.upper()+' Bitfinex:\n' + ("MID: %s\n"
                        "WID: %.2f\n"
                        "PI2: %.2f\n"
-                       "PI4: %.2f\n"
-                       "PI8: %.2f\n"
+#                       "PI4: %.2f\n"
+#                       "PI8: %.2f\n"
                        "PA2: %.2f\n"
-                       "PA4: %.2f\n"
-                       "PA8: %.2f")
+#                       "PA4: %.2f\n"
+#                       "PA8: %.2f\n"
+                       "+CoinMarketCap\n"
+                       "PRC: %.2f\n"
+                       "MRC: %.2f")
                       % (mid,
                          width,
                          power_imbalance_2,
-                         power_imbalance_4,
-                         power_imbalance_8,
+#                         power_imbalance_4,
+#                         power_imbalance_8,
                          power_adjusted_price_2,
-                         power_adjusted_price_4,
-                         power_adjusted_price_8,
+#                         power_adjusted_price_4,
+#                         power_adjusted_price_8,
+                         float(cmc_priceusd),
+                         float(cmc_marketcap)/1000000000,
                          )+'\n'+time.strftime("%a, %d %b %Y %H:%M:%S", time.gmtime(time.time()+180*60)))
 
             except Exception as e:
