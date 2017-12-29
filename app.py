@@ -84,6 +84,21 @@ def get_orderbook(url):
 
 bot = telebot.TeleBot(token)
 
+'''
+/abc
+'''
+
+
+'''
+@bot.message_handler(commands=['abc'])
+def send_welcome(message):
+ bot.reply_to(message, reply)
+'''
+
+'''
+/start
+'''
+
 
 # Обработчик команд '/start' и '/help'.
 @bot.message_handler(commands=['start', 'help'])
@@ -105,10 +120,8 @@ def handle_start_help(message):
 def repeat_all_messages(message): # Название функции не играет никакой роли, в принципе
 
 
-    if message.text[0] == '/' and message.text != '/start':
-
-
-#        bot.send_message(message.chat.id, 'Command: ' + message.text)
+    if message.text[0] == '/':
+#       bot.send_message(message.chat.id, 'Command: ' + message.text)
 
         api = 'https://api.bitfinex.com/v1'
         symbol = message.text[1:4]
@@ -167,16 +180,17 @@ def repeat_all_messages(message): # Название функции не игр�
                          float(cmc_marketcap)/1000000000,
                          )+'\n'+time.strftime("%a, %d %b %Y %H:%M:%S", time.gmtime(time.time()+180*60)))
 
+                print(time.strftime("%a, %d %b %Y %H:%M:%S", time.gmtime(time.time())) + ' Added one: ' + message.text)
+
             except Exception as e:
                print(e)
 
         else:
-            bot.send_message(message.chat.id, 'The available commands are: \n/btc\n/zec\n/bch\n/xrp\n/eth')
+            bot.send_message(message.chat.id, 'Not currency: \n/btc\n/zec\n/bch\n/xrp\n/eth')
 
     else:
-        bot.send_message(message.chat.id, 'The available commands are: \n/btc\n/zec\n/bch\n/xrp\n/eth')
+        bot.send_message(message.chat.id, 'The available commands are: \n/btc\n/zec\n/bch\n/xrp\n/eth\n/abc')
 
-    print(time.strftime("%a, %d %b %Y %H:%M:%S", time.gmtime(time.time())) + ' Added one: '+message.text)
 
 if __name__ == '__main__':
 
